@@ -1,3 +1,5 @@
 .DS_Store
 vendor/
 tests/.*
+lock/
+test.php

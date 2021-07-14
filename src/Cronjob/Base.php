@@ -29,12 +29,12 @@ abstract class Base
     final public function __construct(Options $options)
     {
         $this->options = $options;
-        $this->lockFile = $this->lockDir . '/' . str_replace(array('/', '\\'), '_', strtolower($this->getOption('class'))) . '.lock';
     }
 
     public function setLockDir(string $lockDir) : Base
     {
         $this->lockDir = $lockDir;
+        $this->lockFile = $this->lockDir . '/' . str_replace(array('/', '\\'), '_', strtolower($this->getOption('class'))) . '.lock';
         return $this;
     }
 

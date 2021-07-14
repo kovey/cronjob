@@ -14,7 +14,7 @@ namespace Kovey\Cronjob\Cronjob;
 
 class Sample extends Base
 {
-    protected function process()
+    protected function process() : void
     {
         $offset = $this->getOption('offset', 50);
         $this->echoMsg('offset: ' . $offset);
