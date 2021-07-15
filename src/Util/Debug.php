@@ -19,6 +19,10 @@ class Debug
 
     const DATE_FORMAT = 'Y-m-d H:i:s';
 
+    const EXCEPTION_CODE_FORMAT = "[%s] code: %s\n%s\n%s\n";
+
+    const EXCEPTION_FORMAT = "[%s] %s\n%s\n";
+
     public static function logger(string $format, mixed ...$params) : void
     {
         if (empty($params)) {
@@ -34,5 +38,15 @@ class Debug
             $item = Json::encode($item);
         });
         echo sprintf(self::LOGGER_FORMAT . PHP_EOL, date(self::DATE_FORMAT), sprintf($format, ...$params));
+    }
+
+    public static function exception(\Throwable $e, int $code = 0) : void
+    {
+        if ($code > 0) {
+            echo sprintf(self::EXCEPTION_CODE_FORMAT, date(self::DATE_FORMAT), $code, $e->getMessage(), $e->getTraceAsString());
+            return;
+        }
+
+        echo sprintf(self::EXCEPTION_FORMAT, date(self::DATE_FORMAT), $e->getMessage(), $e->getTraceAsString());
     }
 }

@@ -13,6 +13,7 @@ namespace Kovey\Cronjob\Cronjob;
 
 use Kovey\Cronjob\Cli\Options;
 use Kovey\Library\Exception\BusiException;
+use Kovey\Cronjob\Util\Debug;
 
 abstract class Base
 {
@@ -25,6 +26,10 @@ abstract class Base
     protected bool $isRunning = false;
 
     protected string $lockDir;
+
+    const START_LOGGER_FORMAT = '%s running start.';
+
+    const END_LOGGER_FORMAT = '%s running end.';
 
     final public function __construct(Options $options)
     {
@@ -45,7 +50,7 @@ abstract class Base
 
     protected function echoMsg($msg)
     {
-        echo $msg . PHP_EOL;
+        Debug::logger($msg);
     }
 
     protected function lock() : bool
@@ -70,12 +75,12 @@ abstract class Base
 
     protected function begin() : void
     {
-        echo $this->getOption('class') . ' running start at ' . date('Y-m-d H:i:s') . PHP_EOL;
+        Debug::logger(self::START_LOGGER_FORMAT, $this->getOption('class'));
     }
 
     protected function end()
     {
-        echo $this->getOption('class') . ' running end at ' . date('Y-m-d H:i:s') . PHP_EOL;
+        Debug::logger(self::END_LOGGER_FORMAT, $this->getOption('class'));
     }
 
     public function run() : void
@@ -91,13 +96,10 @@ abstract class Base
             $this->process();
             $this->end();
         } catch (BusiException $e) {
-            echo $e->getCode() . PHP_EOL .
-                $e->getMessage() . PHP_EOL .
-                $e->getTraceAsString() . PHP_EOL;
+            Debug::exception($e, $e->getCode());
             $this->end();
         } catch (\Throwable $e) {
-            echo $e->getMessage() . PHP_EOL .
-                $e->getTraceAsString() . PHP_EOL;
+            Debug::exception($e);
             $this->end();
         } finally {
             $this->unlock();
