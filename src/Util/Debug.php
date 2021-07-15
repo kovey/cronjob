@@ -15,10 +15,14 @@ use Kovey\Library\Util\Json;
 
 class Debug
 {
+    const LOGGER_FORMAT = '[%s] %s';
+
+    const DATE_FORMAT = 'Y-m-d H:i:s';
+
     public static function logger(string $format, mixed ...$params) : void
     {
         if (empty($params)) {
-            echo sprintf('[%s] %s' . PHP_EOL, date('Y-m-d H:i:s'), $format);
+            echo sprintf(self::LOGGER_FORMAT . PHP_EOL, date(self::DATE_FORMAT), $format);
             return;
         }
 
@@ -29,6 +33,6 @@ class Debug
 
             $item = Json::encode($item);
         });
-        echo sprintf('[%s] %s' . PHP_EOL, date('Y-m-d H:i:s'), sprintf($format, ...$params));
+        echo sprintf(self::LOGGER_FORMAT . PHP_EOL, date(self::DATE_FORMAT), sprintf($format, ...$params));
     }
 }
