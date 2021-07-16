@@ -16,6 +16,7 @@ use Kovey\Container\Container;
 use Kovey\Cronjob\Cli\Options;
 use Kovey\Cronjob\Cronjob\Base;
 use function Swoole\Coroutine\run;
+use Kovey\Cronjob\Util\Debug;
 
 class Run
 {
@@ -41,7 +42,7 @@ class Run
             try {
                 $class = $this->options->get('class');
                 if (empty($class)) {
-                    echo 'class is not exists' . PHP_EOL;
+                    Debug::logger('class is empty.');
                     return;
                 }
 
@@ -51,18 +52,14 @@ class Run
 
                 $obj = $this->container->get($class, Util::getTraceId($class), Util::getSpanId($class), array(), $this->options);
                 if (!$obj instanceof Base) {
-                    echo 'class not extends ' . Base::class . PHP_EOL;
+                    Debug::logger('% is not extends %s', $class, Base::class);
                     return;
                 }
 
                 $obj->setLockDir($this->lockDir);
                 $obj->run();
-            } catch (\Exception $e) {
-                echo $e->getMessage() . PHP_EOL .
-                    $e->getTraceAsString() . PHP_EOL;
             } catch (\Throwable $e) {
-                echo $e->getMessage() . PHP_EOL .
-                    $e->getTraceAsString() . PHP_EOL;
+                Debug::exception($e);
             }
         });
     }

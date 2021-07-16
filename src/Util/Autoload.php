@@ -49,6 +49,7 @@ class Autoload
                 break;
             }
         } catch (\Throwable $e) {
+            Debug::exception($e);
         }
     }
 }
